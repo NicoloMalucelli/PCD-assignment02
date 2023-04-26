@@ -36,12 +36,6 @@ public class ScanFolderAgent extends AbstractVerticle {
             if(isRoot){
                 isCompleted.complete();
             }
-            /*
-            vertx.undeploy(context.deploymentID()).onFailure(res -> {
-                res.printStackTrace();
-            });
-           isCompleted.complete();
-             */
         });
 
         if(deployedAgents == 0){
@@ -63,7 +57,9 @@ public class ScanFolderAgent extends AbstractVerticle {
                     if(isRoot){
                         this.log(folder.getPath() + " stop");
                     }
-                    isCompleted.complete();
+                    if(!isCompleted.future().isComplete()){
+                        isCompleted.complete();
+                    }
                 }
             });
         }
@@ -80,7 +76,9 @@ public class ScanFolderAgent extends AbstractVerticle {
                     if(isRoot){
                         this.log(folder.getPath() + " stop");
                     }
-                    isCompleted.complete();
+                    if(!isCompleted.future().isComplete()){
+                        isCompleted.complete();
+                    }
                 }
             });
         }

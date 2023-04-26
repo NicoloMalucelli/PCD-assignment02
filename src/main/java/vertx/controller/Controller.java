@@ -52,8 +52,11 @@ public class Controller implements SourceAnalyzer {
                 rootId = rootAgent.deploymentID();
                 System.out.println("A " + rootId );
                 rootAgent.onComputationEnded().onComplete(res2 -> {
+                    System.out.println("COMPLETE ROOT");
                     vertx.eventBus().publish("computation-ended", "");
-                    vertx.undeploy(rootId);
+                    vertx.undeploy(rootId).onFailure(res3 -> {
+                        res3.printStackTrace();
+                    });
                 });
             });
             return model.getResult();
