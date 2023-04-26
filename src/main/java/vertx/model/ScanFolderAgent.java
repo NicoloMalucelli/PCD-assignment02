@@ -33,11 +33,15 @@ public class ScanFolderAgent extends AbstractVerticle {
         deployedAgents += folder.getDocuments().size();
 
         vertx.eventBus().consumer("stop", message -> {
+            if(isRoot){
+                isCompleted.complete();
+            }
+            /*
             vertx.undeploy(context.deploymentID()).onFailure(res -> {
                 res.printStackTrace();
             });
-            //startPromise.complete();
            isCompleted.complete();
+             */
         });
 
         if(deployedAgents == 0){
