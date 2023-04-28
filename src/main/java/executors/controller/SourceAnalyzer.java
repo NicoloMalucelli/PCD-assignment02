@@ -9,5 +9,5 @@ public interface SourceAnalyzer {
 
     CompletableFuture<Result> getReport(SetupInfo setupInfo);
 
-    //void analyzeSources(String directory);
+    Result analyzeSources(SetupInfo setupInfo);
 }

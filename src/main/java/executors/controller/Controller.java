@@ -19,10 +19,22 @@ public class Controller implements SourceAnalyzer{
 
     @Override
     public CompletableFuture<Result> getReport(SetupInfo setupInfo) {
+        //scan
         return this.model.getDirectoryScanner().getFinalResult();
     }
 
+    @Override
+    public Result analyzeSources(SetupInfo setupInfo) {
+        //scan
+        return this.model.getDirectoryScanner().getMidReport();
+    }
+
     public void startScan(SetupInfo setupInfo) throws IOException {
-        this.model.getDirectoryScanner().scan(Folder.fromDirectory(new File(setupInfo.directory())));
+        this.model.getDirectoryScanner().resetMidReport(setupInfo);
+        this.model.getDirectoryScanner().scan(Folder.fromDirectory(new File(setupInfo.directory())), setupInfo);
+    }
+
+    public void processEvent(Runnable runnable){
+        new Thread(runnable).start();
     }
 }
