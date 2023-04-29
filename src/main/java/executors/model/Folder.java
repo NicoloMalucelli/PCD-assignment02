@@ -23,7 +23,8 @@ public class Folder {
                 try {
                     subFolders.add(Folder.fromDirectory(entry));
                 } catch (IOException e) {
-                    throw new RuntimeException(e);
+                    System.out.println("FOLDER");
+                    e.printStackTrace();
                 }
             }
         }
@@ -33,11 +34,12 @@ public class Folder {
     public List<Document> getDocuments() {
         List<Document> documents = new LinkedList<Document>();
         for (File entry : file.listFiles()) {
-            if (entry.getName().endsWith("java")){
+            if (!entry.isDirectory() && entry.getName().endsWith("java")){
                 try {
                     documents.add(Document.fromFile(entry));
                 } catch (IOException e) {
-                    throw new RuntimeException(e);
+                    System.out.println("Document");
+                    e.printStackTrace();
                 }
             }
         }

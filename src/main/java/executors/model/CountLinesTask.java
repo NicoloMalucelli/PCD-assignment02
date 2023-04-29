@@ -19,7 +19,6 @@ public class CountLinesTask extends RecursiveTask<AnalyzedFile> {
     protected AnalyzedFile compute() {
         final AnalyzedFile analyzedFile = new AnalyzedFile(document.getPath(), document.countLines());
         midReport.add(analyzedFile);
-        //TODO notify
         return analyzedFile;
     }
 }
