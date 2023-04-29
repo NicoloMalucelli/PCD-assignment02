@@ -1,11 +1,12 @@
 package executors.view;
 
 import executors.controller.Controller;
-import utils.SetupInfo;
-import utils.Strings;
+import utils.*;
 
 import java.io.IOException;
+import java.util.Map;
 import java.util.Scanner;
+import java.util.concurrent.ExecutionException;
 
 public class ConsoleView {
     private Controller controller;
@@ -38,15 +39,19 @@ public class ConsoleView {
         }while (!Strings.isNumeric(tmp) || Integer.parseInt(tmp) <= 1);
         final Integer lastInterval = Integer.parseInt(tmp);
 
-        this.controller.getReport(new SetupInfo(dir, nFiles, nIntervals, lastInterval)).thenAccept(r -> {
-            System.out.println(r.getRanking(2));
-            System.out.println(r.getDistribution());
-        });
-
         try {
-            this.controller.startScan(new SetupInfo(dir, nFiles, nIntervals, lastInterval));
-        } catch (IOException e) {
-            e.printStackTrace();
+            Result result = this.controller.getReport(new SetupInfo(dir, nFiles, nIntervals, lastInterval)).get();
+            for(AnalyzedFile analyzedFile : result.getRanking()){
+                System.out.println(analyzedFile);
+            }
+            System.out.println();
+            for(Map.Entry<Interval, Integer> analyzedFile : result.getDistribution().entrySet()){
+                System.out.println(analyzedFile.getKey() + " = " + analyzedFile.getValue());
+            }
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        } catch (ExecutionException e) {
+            throw new RuntimeException(e);
         }
 
     }

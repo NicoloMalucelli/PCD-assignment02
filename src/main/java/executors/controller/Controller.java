@@ -9,6 +9,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ForkJoinTask;
 
 public class Controller implements SourceAnalyzer{
 
@@ -18,20 +19,17 @@ public class Controller implements SourceAnalyzer{
     }
 
     @Override
-    public CompletableFuture<Result> getReport(SetupInfo setupInfo) {
-        //scan
-        return this.model.getDirectoryScanner().getFinalResult();
+    public ForkJoinTask<Result> getReport(SetupInfo setupInfo) {
+        return this.model.getDirectoryScanner().getFinalResult(setupInfo);
     }
 
     @Override
     public Result analyzeSources(SetupInfo setupInfo) {
-        //scan
-        return this.model.getDirectoryScanner().getMidReport();
+        return this.model.getDirectoryScanner().getMidReport(setupInfo);
     }
 
-    public void startScan(SetupInfo setupInfo) throws IOException {
-        this.model.getDirectoryScanner().resetMidReport(setupInfo);
-        this.model.getDirectoryScanner().scan(Folder.fromDirectory(new File(setupInfo.directory())), setupInfo);
+    public void stopExecution(){
+        this.model.getDirectoryScanner().stopExecution();
     }
 
     public void processEvent(Runnable runnable){

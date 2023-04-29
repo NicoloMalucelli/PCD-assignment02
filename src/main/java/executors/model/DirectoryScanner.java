@@ -3,25 +3,38 @@ package executors.model;
 import utils.Result;
 import utils.SetupInfo;
 
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ForkJoinPool;
+import java.io.File;
+import java.io.IOException;
+import java.util.concurrent.*;
 
 public class DirectoryScanner {
-    private final ForkJoinPool forkJoinPool = new ForkJoinPool();
-    private final CompletableFuture<Result> finalResult = new CompletableFuture<>();
+    private ForkJoinPool forkJoinPool = new ForkJoinPool();
     private Result midReport;
 
-    public Result getMidReport() {
-        return midReport;
+    public Result getMidReport(SetupInfo setupInfo) {
+        try {
+            this.resetMidReport(setupInfo);
+            forkJoinPool.execute(new ScanFolderTask(Folder.fromDirectory(new File(setupInfo.directory())), setupInfo, midReport));
+            return this.midReport;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
-    public void resetMidReport(SetupInfo setupInfo){
-        midReport = new Result(setupInfo.nIntervals(), setupInfo.lastIntervalLowerBound());
+    private void resetMidReport(SetupInfo setupInfo){
+        midReport = new Result(setupInfo.nIntervals(), setupInfo.lastIntervalLowerBound(), setupInfo.nFiles());
     }
 
-    public void scan(Folder folder, SetupInfo setupInfo){
-        this.finalResult.complete(forkJoinPool.invoke(new ScanFolderTask(folder, setupInfo, midReport)));
+    public ForkJoinTask<Result> getFinalResult(SetupInfo setupInfo){
+        try {
+            this.resetMidReport(setupInfo);
+            return forkJoinPool.submit(new ScanFolderTask(Folder.fromDirectory(new File(setupInfo.directory())), setupInfo, midReport));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
-    public CompletableFuture<Result> getFinalResult(){
-        return this.finalResult;
+
+    public void stopExecution(){
+        this.forkJoinPool.shutdownNow();
+        forkJoinPool = new ForkJoinPool();
     }
 }

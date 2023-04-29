@@ -8,6 +8,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
 import java.util.List;
+import java.util.Scanner;
 import java.util.stream.Collectors;
 
 public class GuiView implements ResultObserver {
@@ -92,17 +93,14 @@ public class GuiView implements ResultObserver {
                         Integer.parseInt(txtLastInterval.getText()));
                 Result result = this.controller.analyzeSources(setupInfo);
                 result.listen(this);
-                try {
-                    this.controller.startScan(setupInfo);
-                } catch (IOException ex) {
-                    throw new RuntimeException(ex);
-                }
+                //this.controller.startScan(setupInfo);
             });
 
 
         });
 
         btnStop.addActionListener(e -> {
+            this.controller.stopExecution();
             btnStart.setEnabled(true);
             btnStop.setEnabled(false);
         });

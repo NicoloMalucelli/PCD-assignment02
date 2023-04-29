@@ -6,39 +6,46 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class Folder {
-    private final String path;
-    private final List<Folder> subFolders;
-    private final List<Document> documents;
+    private final File file;
 
-    private Folder(String path, List<Folder> subFolders, List<Document> documents) {
-        this.subFolders = subFolders;
-        this.documents = documents;
-        this.path = path;
+    private Folder(File file) {
+        this.file = file;
     }
 
     public String getPath(){
-        return this.path;
+        return this.file.getPath();
     }
 
     public List<Folder> getSubFolders() {
-        return this.subFolders;
+        List<Folder> subFolders = new LinkedList<Folder>();
+        for (File entry : file.listFiles()) {
+            if (entry.isDirectory()) {
+                try {
+                    subFolders.add(Folder.fromDirectory(entry));
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
+        return subFolders;
     }
 
     public List<Document> getDocuments() {
-        return this.documents;
+        List<Document> documents = new LinkedList<Document>();
+        for (File entry : file.listFiles()) {
+            if (entry.getName().endsWith("java")){
+                try {
+                    documents.add(Document.fromFile(entry));
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
+        return documents;
     }
 
     public static Folder fromDirectory(File dir) throws IOException {
-        List<Document> documents = new LinkedList<Document>();
-        List<Folder> subFolders = new LinkedList<Folder>();
-        for (File entry : dir.listFiles()) {
-            if (entry.isDirectory()) {
-                subFolders.add(Folder.fromDirectory(entry));
-            } else if (entry.getName().endsWith("java")){
-                documents.add(Document.fromFile(entry));
-            }
-        }
-        return new Folder(dir.getPath(), subFolders, documents);
+        return new Folder(dir);
     }
 }
 

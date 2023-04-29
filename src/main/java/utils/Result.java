@@ -10,7 +10,8 @@ public class Result {
     private final Map<Interval, Integer> distribution = new TreeMap<>();
     private Set<ResultObserver> observers = new HashSet<>();
     private int n;
-    public Result(int nIntervals, int lastIntervalLowerBound) {
+
+    public Result(int nIntervals, int lastIntervalLowerBound, int n) {
         if(nIntervals == 1){
             distribution.put(new Interval(0, Integer.MAX_VALUE), 0);
         }else {
@@ -21,10 +22,6 @@ public class Result {
             distribution.put(new Interval(intervalSize * (nIntervals - 2), lastIntervalLowerBound), 0);
             distribution.put(new Interval(lastIntervalLowerBound, Integer.MAX_VALUE), 0);
         }
-    }
-
-    public Result(int nIntervals, int lastIntervalLowerBound, int n) {
-        this(nIntervals, lastIntervalLowerBound);
         this.n = n;
     }
 

@@ -39,7 +39,7 @@ public class ScanFolderTask extends RecursiveTask<Result> {
             task.fork();
         }
 
-        final Result result = new Result(setupInfo.nIntervals(), setupInfo.lastIntervalLowerBound());
+        final Result result = new Result(setupInfo.nIntervals(), setupInfo.lastIntervalLowerBound(), setupInfo.nFiles());
         for(RecursiveTask<AnalyzedFile> task : countLinesTasks){
             result.add(task.join());
         }
