@@ -1,7 +1,7 @@
 package vertx.model;
 
-import executors.model.Document;
-import executors.model.Folder;
+import utils.Document;
+import utils.Folder;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Future;
 import io.vertx.core.Promise;

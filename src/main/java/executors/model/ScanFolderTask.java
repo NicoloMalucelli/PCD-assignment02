@@ -1,8 +1,6 @@
 package executors.model;
 
-import utils.AnalyzedFile;
-import utils.Result;
-import utils.SetupInfo;
+import utils.*;
 
 import java.util.LinkedList;
 import java.util.List;

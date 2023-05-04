@@ -1,7 +1,6 @@
 package vertx.controller;
 
-import executors.model.Folder;
-import io.vertx.core.AbstractVerticle;
+import utils.Folder;
 import io.vertx.core.Future;
 import io.vertx.core.Promise;
 import io.vertx.core.Vertx;
@@ -11,7 +10,6 @@ import utils.Result;
 import utils.SetupInfo;
 import vertx.model.Model;
 import vertx.model.ScanFolderAgent;
-import vertx.view.SourceAnalyzer;
 
 import java.io.File;
 import java.io.IOException;
@@ -31,9 +29,9 @@ public class Controller implements SourceAnalyzer {
         try {
             this.model.setResult(new Result(setupInfo.nIntervals(), setupInfo.lastIntervalLowerBound(), setupInfo.nFiles()));
             ScanFolderAgent ab = new ScanFolderAgent(this, Folder.fromDirectory(new File(setupInfo.directory())));
-            vertx.deployVerticle(ab).onComplete(res -> {
-                System.out.println("completed");
-            });
+            //vertx.deployVerticle(ab).onComplete(res -> {
+                //System.out.println("completed");
+            //});
             ab.onComputationEnded().onComplete(res -> {
                 result.complete(model.getResult());
             });

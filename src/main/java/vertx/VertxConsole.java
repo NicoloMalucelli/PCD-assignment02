@@ -15,8 +15,8 @@ public class VertxConsole {
         Vertx vertx = Vertx.vertx();
         Model model = new Model();
         Controller controller = new Controller(model);
-        SetupInfo setupInfo = new SetupInfo("C:\\Users\\nicol\\Documents\\Progetti\\scarabeo", 10, 10, 150);
-        vertx.deployVerticle(new ConsoleAgent(controller, setupInfo));
+        //SetupInfo setupInfo = new SetupInfo("C:\\Users\\nicol\\Documents\\Progetti\\scarabeo", 10, 10, 150);
+        vertx.deployVerticle(new ConsoleAgent(controller, getSetupInfo()));
     }
 
     private static SetupInfo getSetupInfo(){

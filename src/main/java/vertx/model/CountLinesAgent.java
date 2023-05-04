@@ -1,6 +1,6 @@
 package vertx.model;
 
-import executors.model.Document;
+import utils.Document;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Promise;
 import io.vertx.core.eventbus.EventBus;

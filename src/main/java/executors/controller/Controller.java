@@ -1,14 +1,9 @@
 package executors.controller;
 
-import executors.model.Folder;
 import executors.model.Model;
 import utils.SetupInfo;
 import utils.Result;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Set;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ForkJoinTask;
 
 public class Controller implements SourceAnalyzer{

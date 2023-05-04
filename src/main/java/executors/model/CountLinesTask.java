@@ -1,6 +1,7 @@
 package executors.model;
 
 import utils.AnalyzedFile;
+import utils.Document;
 import utils.Result;
 
 import java.util.concurrent.RecursiveTask;

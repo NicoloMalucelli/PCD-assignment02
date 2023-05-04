@@ -1,4 +1,4 @@
-package vertx.view;
+package vertx.controller;
 
 import io.vertx.core.Future;
 import io.vertx.core.Vertx;

@@ -1,5 +1,6 @@
 package executors.model;
 
+import utils.Folder;
 import utils.Result;
 import utils.SetupInfo;
 
