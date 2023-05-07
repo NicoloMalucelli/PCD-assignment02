@@ -25,18 +25,47 @@ public class Controller implements SourceAnalyzer{
         Thread.ofVirtual().start(() -> {
             Thread rootScanner = null;
             try {
-                rootScanner = Thread.ofVirtual().unstarted(new ScanFolderTask(Folder.fromDirectory(new File(setupInfo.directory())), model.getResult()));
+                rootScanner = Thread.ofVirtual().unstarted(new ScanFolderTask(Folder.fromDirectory(new File(setupInfo.directory())), model.getResult(), model.getStopExecution()));
                 rootScanner.start();
                 try {
                     rootScanner.join();
                     result.complete(model.getResult());
                 } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
+
                 }
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         });
         return result;
+    }
+
+    @Override
+    public Result analyzeSources(SetupInfo setupInfo, CompletableFuture<Void> executionEnded){
+        model.init(setupInfo);
+        Thread.ofVirtual().start(() -> {
+            Thread rootScanner = null;
+            try {
+                rootScanner = Thread.ofVirtual().unstarted(new ScanFolderTask(Folder.fromDirectory(new File(setupInfo.directory())), model.getResult(), model.getStopExecution()));
+                rootScanner.start();
+                try {
+                    rootScanner.join();
+                } catch (InterruptedException e) {
+
+                }
+                executionEnded.complete(null);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
+        return model.getResult();
+    }
+
+    public void processEvent(Runnable runnable) {
+        Thread.ofVirtual().start(runnable);
+    }
+
+    public void stopExecution() {
+        this.model.getStopExecution().complete(null);
     }
 }

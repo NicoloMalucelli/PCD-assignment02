@@ -1,12 +1,13 @@
-package executors.view;
+package virtual_threads.view;
 
 import utils.ResultObserver;
+import virtual_threads.controller.Controller;
 import utils.*;
-import executors.controller.Controller;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 public class GuiView implements ResultObserver {
@@ -89,12 +90,15 @@ public class GuiView implements ResultObserver {
                         Integer.parseInt(txtNumOfFiles.getText()),
                         Integer.parseInt(txtNumOfIntervals.getText()),
                         Integer.parseInt(txtLastInterval.getText()));
-                Result result = this.controller.analyzeSources(setupInfo);
+                CompletableFuture<Void> executionEnded = new CompletableFuture<>();
+                executionEnded.thenRun(() -> {
+                    btnStart.setEnabled(true);
+                    btnStop.setEnabled(false);
+                });
+                Result result = this.controller.analyzeSources(setupInfo, executionEnded);
                 result.listen(this);
                 //this.controller.startScan(setupInfo);
             });
-
-
         });
 
         btnStop.addActionListener(e -> {

@@ -1,7 +1,5 @@
 package utils;
 
-import executors.model.ResultObserver;
-
 import java.util.*;
 import java.util.stream.Collectors;
 
