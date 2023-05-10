@@ -1,5 +1,7 @@
 package rx.view;
 
+import io.reactivex.rxjava3.core.Scheduler;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 import rx.controller.Controller;
 import utils.*;
 
@@ -16,7 +18,6 @@ public class ConsoleView {
     }
 
     public void start(){
-        /*
         String tmp;
         System.out.print("Root directory: ");
         Scanner scanner = new Scanner(System.in);
@@ -39,13 +40,9 @@ public class ConsoleView {
             tmp = scanner.nextLine();
         }while (!Strings.isNumeric(tmp) || Integer.parseInt(tmp) <= 1);
         final Integer lastInterval = Integer.parseInt(tmp);
-        */
-        final String dir = "C:\\Users\\nicol\\Documents\\Progetti\\Scarabeo";
-        final Integer nFiles = 5;
-        final Integer nIntervals = 5;
-        final Integer lastInterval = 150;
 
-        this.controller.getReport(new SetupInfo(dir, nFiles, nIntervals, lastInterval)).subscribe(result -> {
+        this.controller.getReport(new SetupInfo(dir, nFiles, nIntervals, lastInterval))
+                .subscribe(result -> {
             for(AnalyzedFile analyzedFile : result.getRanking()){
                 System.out.println(analyzedFile);
             }
@@ -54,6 +51,7 @@ public class ConsoleView {
                 System.out.println(analyzedFile.getKey() + " = " + analyzedFile.getValue());
             }
         });
+
     }
 
 }

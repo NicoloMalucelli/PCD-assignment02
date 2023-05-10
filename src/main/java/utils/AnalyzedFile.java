@@ -25,6 +25,6 @@ public class AnalyzedFile implements Comparable<AnalyzedFile> {
 
     @Override
     public String toString() {
-        return filePath + "has " + lines + "lines";
+        return String.format("%5d | %s", lines, filePath);
     }
 }
