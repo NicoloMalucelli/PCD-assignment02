@@ -43,7 +43,6 @@ public class VertxConsole {
             tmp = scanner.nextLine();
         }while (!Strings.isNumeric(tmp) || Integer.parseInt(tmp) <= 0);
         final Integer lastInterval = Integer.parseInt(tmp);
-
         return new SetupInfo(dir, nFiles, nIntervals, lastInterval);
     }
 

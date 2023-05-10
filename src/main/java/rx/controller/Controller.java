@@ -13,7 +13,7 @@ import java.security.interfaces.RSAKey;
 import java.util.concurrent.Flow;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class Controller {
+public class Controller implements SourceAnalyzer {
     private final Model model;
     public Controller(Model model){
         this.model = model;
@@ -23,6 +23,7 @@ public class Controller {
         this.model.getShouldStop().set(true);
     }
 
+    @Override
     public Single<Result> getReport(SetupInfo setupInfo){
         this.model.resetShouldStop();
         Result emptyResult = new Result(setupInfo.nIntervals(), setupInfo.lastIntervalLowerBound(), setupInfo.nFiles());
@@ -30,6 +31,7 @@ public class Controller {
                 .reduce(emptyResult, (result, af) -> result.accumulate(af));
     }
 
+    @Override
     public Flowable<Result> analyzeSources(SetupInfo setupInfo){
         this.model.resetShouldStop();
         Result result = new Result(setupInfo.nIntervals(), setupInfo.lastIntervalLowerBound(), setupInfo.nFiles());

@@ -30,9 +30,7 @@ public class Controller implements SourceAnalyzer {
         try {
             this.model.setResult(new Result(setupInfo.nIntervals(), setupInfo.lastIntervalLowerBound(), setupInfo.nFiles()));
             ScanFolderAgent ab = new ScanFolderAgent(this, Folder.fromDirectory(new File(setupInfo.directory())));
-            //vertx.deployVerticle(ab).onComplete(res -> {
-                //System.out.println("completed");
-            //});
+            vertx.deployVerticle(ab);
             ab.onComputationEnded().onComplete(res -> {
                 result.complete(model.getResult());
             });
