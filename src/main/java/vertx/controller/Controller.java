@@ -13,6 +13,7 @@ import vertx.model.ScanFolderAgent;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.concurrent.CompletableFuture;
 
 public class Controller implements SourceAnalyzer {
 

@@ -6,10 +6,14 @@ import java.util.stream.Collectors;
 public class Result {
     private final Set<AnalyzedFile> ranking = new TreeSet<>();
     private final Map<Interval, Integer> distribution = new TreeMap<>();
+    private final int nIntervals;
+    private final int lastIntervalLowerBound;
     private Set<ResultObserver> observers = new HashSet<>();
     private int n;
 
     public Result(int nIntervals, int lastIntervalLowerBound, int n) {
+        this.nIntervals = nIntervals;
+        this.lastIntervalLowerBound = lastIntervalLowerBound;
         if(nIntervals == 1){
             distribution.put(new Interval(0, Integer.MAX_VALUE), 0);
         }else {
@@ -53,6 +57,11 @@ public class Result {
         for(AnalyzedFile entry : result2.getFiles()){
             this.add(entry);
         }
+    }
+    
+    public Result accumulate(AnalyzedFile item) {
+        this.add(item);
+        return this;
     }
 
     public void listen(ResultObserver resultObserver){

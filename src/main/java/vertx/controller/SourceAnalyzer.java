@@ -5,6 +5,8 @@ import io.vertx.core.Vertx;
 import utils.Result;
 import utils.SetupInfo;
 
+import java.util.concurrent.CompletableFuture;
+
 public interface SourceAnalyzer {
     Future<Result> getReport(SetupInfo setupInfo, Vertx vertx);
 
