@@ -40,7 +40,7 @@ public class Result {
     }
 
     public synchronized Map<Interval, Integer> getDistribution() {
-        return this.distribution;
+        return new HashMap<>(distribution);
     }
 
     public synchronized void add(AnalyzedFile item) {
@@ -59,7 +59,7 @@ public class Result {
         }
     }
     
-    public Result accumulate(AnalyzedFile item) {
+    public synchronized Result accumulate(AnalyzedFile item) {
         this.add(item);
         return this;
     }

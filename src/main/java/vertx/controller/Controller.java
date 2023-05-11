@@ -29,9 +29,9 @@ public class Controller implements SourceAnalyzer {
         Promise<Result> result = new PromiseImpl<>();
         try {
             this.model.setResult(new Result(setupInfo.nIntervals(), setupInfo.lastIntervalLowerBound(), setupInfo.nFiles()));
-            ScanFolderAgent ab = new ScanFolderAgent(this, Folder.fromDirectory(new File(setupInfo.directory())));
-            vertx.deployVerticle(ab);
-            ab.onComputationEnded().onComplete(res -> {
+            ScanFolderAgent rootScanner = new ScanFolderAgent(this, Folder.fromDirectory(new File(setupInfo.directory())));
+            vertx.deployVerticle(rootScanner);
+            rootScanner.onComputationEnded().onComplete(res -> {
                 result.complete(model.getResult());
             });
         } catch (IOException e) {
@@ -47,12 +47,14 @@ public class Controller implements SourceAnalyzer {
             ScanFolderAgent rootAgent = new ScanFolderAgent(this, Folder.fromDirectory(new File(setupInfo.directory())), true);
             vertx.deployVerticle(rootAgent).onComplete(res -> {
                 rootId = rootAgent.deploymentID();
-                System.out.println("A " + rootId );
                 rootAgent.onComputationEnded().onComplete(res2 -> {
-                    System.out.println("COMPLETE ROOT");
                     vertx.eventBus().publish("computation-ended", "");
-                    vertx.undeploy(rootId).onFailure(res3 -> {
-                        res3.printStackTrace();
+                    vertx.undeploy(rootId).onComplete(res3 -> {
+                        if (res3.succeeded()) {
+                            System.out.println("Undeployed ok");
+                        } else {
+                            System.out.println("Undeploy failed!");
+                        }
                     });
                 });
             });

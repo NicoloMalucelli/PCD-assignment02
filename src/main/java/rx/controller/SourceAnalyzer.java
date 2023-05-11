@@ -7,6 +7,5 @@ import utils.SetupInfo;
 
 public interface SourceAnalyzer {
     Single<Result> getReport(SetupInfo setupInfo);
-
     Flowable<Result> analyzeSources(SetupInfo setupInfo);
 }

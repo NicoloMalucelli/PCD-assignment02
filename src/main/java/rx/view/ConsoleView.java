@@ -7,7 +7,9 @@ import utils.*;
 
 import java.util.Map;
 import java.util.Scanner;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class ConsoleView {
 
@@ -41,6 +43,7 @@ public class ConsoleView {
         }while (!Strings.isNumeric(tmp) || Integer.parseInt(tmp) <= 1);
         final Integer lastInterval = Integer.parseInt(tmp);
 
+        final AtomicBoolean reportReceived = new AtomicBoolean();
         this.controller.getReport(new SetupInfo(dir, nFiles, nIntervals, lastInterval))
                 .subscribe(result -> {
             for(AnalyzedFile analyzedFile : result.getRanking()){
@@ -50,8 +53,16 @@ public class ConsoleView {
             for(Map.Entry<Interval, Integer> analyzedFile : result.getDistribution().entrySet()){
                 System.out.println(analyzedFile.getKey() + " = " + analyzedFile.getValue());
             }
+            reportReceived.set(true);
         });
 
+        while(!reportReceived.get()){
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 
 }

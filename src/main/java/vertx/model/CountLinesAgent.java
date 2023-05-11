@@ -7,6 +7,8 @@ import io.vertx.core.eventbus.EventBus;
 import utils.AnalyzedFile;
 import vertx.controller.Controller;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
 public class CountLinesAgent extends AbstractVerticle {
 
     private final Document document;
@@ -18,11 +20,6 @@ public class CountLinesAgent extends AbstractVerticle {
 
     @Override
     public void start(Promise<Void> startPromise){
-        vertx.eventBus().consumer("stop", message -> {
-            //log(context.deploymentID());
-            vertx.undeploy(context.deploymentID());
-        });
-
         this.controller.addAnalyzedFile(new AnalyzedFile(document.getPath(), document.countLines()));
         EventBus eb = vertx.eventBus();
         eb.publish("mid-report", "");
